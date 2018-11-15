@@ -1,0 +1,59 @@
+// Grid
+//
+// This is a "rigid" CSS grid based grid system
+// It aims to replace standard float:left systems
+// It's based on 12 columns by default
+
+// calc stuff seems complicated, but the only way I know
+// not run into too much overflow trouble with bigger gaps
+// Based on Michael_Bs answer here:
+// https://stackoverflow.com/questions/45090726/
+
+
+.grid {
+    // MODIFY: Number of columns, best: 8 - 18
+    $grid-cols: 12;
+    // There is one less Gap than Columns
+    $grid-gaps: $grid-cols - 1;
+    // Percentage for each col
+    $col-size:  100% / $grid-cols;
+    // Total Space in Grid occupied within the Gaps
+    @if variable-exists(gap-space) {
+        /* I get output to the CSS file */
+    }
+    @else {
+        $gap-space: 0px;
+    }
+    $gap-total: 0;
+    // Space to substract by each col for gaps
+    $gap-subst: $gap-total / $grid-cols;
+
+    display: grid;
+    // Default                    12 columns              8.333333%      - ………
+    grid-template-columns: repeat(#{$grid-cols}, #{$col-size - $gap-subst});
+    grid-gap: 0;
+    gap: 2px; // supposed standard
+    grid-auto-flow: dense; // opinionated
+}
+
+// CSS Grid grid spans
+
+@for $i from 1 through 16 {
+    .span-#{$i}    { grid-column:  span #{$i} } // Span cols across tracks
+    .start-#{$i}   { grid-column-start: #{$i} } // Define a horizontal start point
+    .end-#{$i}     { grid-column-end:   #{$i} } // Define an horizontal end point
+    .start-y-#{$i} { grid-row-start:    #{$i} } // Define a vertical start point
+    .end-y-#{$i}   { grid-row-end:      #{$i} } // Define an vertical end point
+}
+
+// Grid CSS gaps
+
+// Gutter sizes
+$gaps : "xs", "s", "m";
+
+@each $gap in $gaps {
+    [class*="grid"].gap_#{$gap}   { $gap-space     : .25rem }
+    // Individual Horizontal gutters
+    [class*="grid"].gap-h_#{$gap} { grid-row-gap    : .25rem }
+    //[class*="grid"].gap-v_#{$gap} { grid-column-gap : var(--space-#{$gap}); grid-gap: 0; }
+}

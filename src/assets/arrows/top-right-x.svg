@@ -1,0 +1,17 @@
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>top-right-x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polyline id="path-1" points="81.9932445 217.825752 81.9932445 180.812241 20.1742483 118.993244"></polyline>
+    </defs>
+    <g id="Arrows" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="top-right-x">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Line-3" stroke="#000000" stroke-width="5" stroke-linecap="square" transform="translate(51.083746, 168.409498) rotate(270.000000) translate(-51.083746, -168.409498) " xlink:href="#path-1"></use>
+            <polygon id="Shape" fill="#000000" fill-rule="nonzero" transform="translate(118.500000, 137.500000) rotate(360.000000) translate(-118.500000, -137.500000) " points="101 120 101 155 127.006609 141.996696 136 137.5"></polygon>
+        </g>
+    </g>
+</svg>

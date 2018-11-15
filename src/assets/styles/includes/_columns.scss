@@ -1,0 +1,18 @@
+// Columns
+//
+// CSS columns can make list items or text flow over columns.
+
+.columns {
+
+  // Don't let the childs break
+  &:not(.break-inside) > * {
+    -webkit-column-break-inside: avoid; // Chrome, Safari, Opera
+              page-break-inside: avoid; // Firefox
+                   break-inside: avoid; // IE 10+
+  }
+
+  &:not(.article) > *:not(:first-child) { margin-top: var(--gap-space, 0) }
+
+  // span an element over all columns
+  .span-all { column-span: all }
+}

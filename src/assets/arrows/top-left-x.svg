@@ -1,0 +1,12 @@
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>top-left-x</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Arrows" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="top-left-x">
+            <path d="M199.936981,199.015295 L103,100 C124.333333,100 135,100 135,100" id="Line-2" stroke="#000000" stroke-width="5" stroke-linecap="square"></path>
+            <polygon id="Shape" fill="#000000" fill-rule="nonzero" points="135 83 135 118 161.006609 104.996696 170 100.5"></polygon>
+        </g>
+    </g>
+</svg>

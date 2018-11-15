@@ -1,0 +1,21 @@
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50 (54983) - http://www.bohemiancoding.com/sketch -->
+    <title>right-x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M21,118 L21,80.986489" id="path-1"></path>
+        <polygon id="path-3" points="41 82 41 117 67.0066086 103.996696 76 99.5"></polygon>
+    </defs>
+    <g id="Arrows" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="right-x">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Line-3" stroke="#000000" stroke-width="5" stroke-linecap="square" transform="translate(21.000000, 99.500000) rotate(270.000000) translate(-21.000000, -99.500000) " xlink:href="#path-1"></use>
+            <mask id="mask-4" fill="white">
+                <use xlink:href="#path-3"></use>
+            </mask>
+            <use id="Shape" fill="#000000" fill-rule="nonzero" transform="translate(58.500000, 99.500000) rotate(360.000000) translate(-58.500000, -99.500000) " xlink:href="#path-3"></use>
+        </g>
+    </g>
+</svg>

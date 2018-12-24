@@ -3,7 +3,7 @@
     <div class="scanword" :class="classModifiers">
       <div class="scanword__cell" @mouseover="highlight(cell)" @click="activate(cell)" v-bind:class="[cell.classes, {'scanword__cell--active': active.cells.indexOf(cell.id) > -1, 'scanword__cell--highlighted': highlighted.indexOf(cell.id) > -1, 'scanword__cell--focused': active.focused === cell.id}]" v-for="cell in cells" :coordinates="cell.coordinates" :key="cell.id">
         {{ cell.text }}
-        <editable :ref="cell.id" v-if="cell.editable" :content.sync="scanwordClue[cell.id]"></editable>
+        <editable-cell :ref="cell.id" :reference="cell.id" v-if="cell.editable"></editable-cell>
         <div v-if="cell.arrows">
           <icon v-for="(arrow, key) in cell.arrows" :size="arrowSize" :glyph="arrow" :key="key"></icon>
         </div>
@@ -15,7 +15,7 @@
 <script>
 import axios from 'axios'
 import Icon from './Icon'
-import Editable from './Editable'
+import EditableCell from './EditableCell'
 import ArrowTopLeftX from './../assets/arrows/top-left-x.svg'
 import ArrowTopLeftY from './../assets/arrows/top-left-y.svg'
 import ArrowTopX from './../assets/arrows/top-x.svg'
@@ -35,7 +35,7 @@ export default {
   name: 'ScanWord',
   components: {
     Icon,
-    Editable
+    EditableCell
   },
   props: {
     theme: {
@@ -87,9 +87,11 @@ export default {
         cells: []
       },
       highlighted: [],
-      scanwordClue: {},
       debug: false
     }
+  },
+  beforeCreate() {
+    this.$store.commit('scanword/initialiseStore');
   },
   created () { // when the Vue app is booted up, this is run automatically.
     var self = this
@@ -98,19 +100,7 @@ export default {
       self.cells = self.filteredIssues()
     })
 
-    // eslint-disable-next-line
-    console.clear()
-    self.eventHub.$on('update-cell-content', self.saveScanwordClue)
     self.eventHub.$on('cell-navigation', self.cellNavigation)
-  },
-  mounted() {
-    if (localStorage.getItem('scanwordClue')) {
-      try {
-        this.scanwordClue = JSON.parse(localStorage.getItem('scanwordClue'));
-      } catch(e) {
-        localStorage.removeItem('scanwordClue');
-      }
-    }
   },
   computed: {
     classModifiers () {
@@ -262,18 +252,7 @@ export default {
         }
       }
     },
-    saveScanwordClue () {
-      let scanwordClue = Object.keys(this.scanwordClue)
-        .filter(item => this.scanwordClue[item].length > 0)
-        .reduce((result, currentItem) => {
-          result[currentItem] = this.scanwordClue[currentItem]
-          return result
-        }, {})
-
-      const parsed = JSON.stringify(scanwordClue);
-      localStorage.setItem('scanwordClue', parsed);
-    },
-    cellNavigation (event) {
+    cellNavigation (event, payload) {
       let self = this
       let focusedCell = self.cells.find(item => item.id === self.active.focused)
       let coordinates = Object.assign({}, focusedCell.coordinates)
@@ -281,18 +260,38 @@ export default {
         return item.editable && (item.coordinates.x === coordinates.x || item.coordinates.y === coordinates.y)
       })
       let cellsFiltered = {
-        37: cells.filter(item => item.coordinates.x < coordinates.x).sort((a, b) => b.coordinates.x - a.coordinates.x),
-        38: cells.filter(item => item.coordinates.y < coordinates.y).sort((a, b) => b.coordinates.y - a.coordinates.y),
-        39: cells.filter(item => item.coordinates.x > coordinates.x).sort((a, b) => a.coordinates.x - b.coordinates.x),
-        40: cells.filter(item => item.coordinates.y > coordinates.y).sort((a, b) => a.coordinates.y - b.coordinates.y)
+        left: cells.filter(item => item.coordinates.x < coordinates.x).sort((a, b) => b.coordinates.x - a.coordinates.x),
+        up: cells.filter(item => item.coordinates.y < coordinates.y).sort((a, b) => b.coordinates.y - a.coordinates.y),
+        right: cells.filter(item => item.coordinates.x > coordinates.x).sort((a, b) => a.coordinates.x - b.coordinates.x),
+        down: cells.filter(item => item.coordinates.y > coordinates.y).sort((a, b) => a.coordinates.y - b.coordinates.y)
       }
-      let targetCell = cellsFiltered[event.keyCode].length ? cellsFiltered[event.keyCode][0] : focusedCell
+      let direction
+
+      if (
+        event.keyCode > 64 && event.keyCode < 91 || // если введена буква
+        [186, 188, 190, 219, 221, 222].indexOf(event.keyCode) > -1 || // дополнительные кириллические символы
+        (event.keyCode === 39 && payload.caretOffset === payload.textLength)
+        /* || // right И курсор не в начале строки или строка пустая
+        ([8, 13, 27].indexOf(event.keyCode) > -1 && payload.textLength) // backspace или space или escape И непустая строка */
+      ) {
+        direction = 'right'
+      } else if (
+        (event.keyCode === 37 && payload.caretOffset === 0) || // left И курсор в начале строки
+        (event.keyCode === 8 && !payload.textLength) // backspace и пустая строка
+      ) {
+        direction = 'left'
+      } else if ([38, 40].indexOf(event.keyCode) > -1) { // up ИЛИ down
+        direction = event.keyCode === 38 ? 'up' : 'down'
+      } else {
+        return
+      }
+
+      let targetCell = cellsFiltered[direction].length ? cellsFiltered[direction][0] : focusedCell
 
       self.activate(targetCell)
     }
   },
   beforeDestroy: function () {
-    this.eventHub.$off('update-cell-content', this.saveScanwordClue)
     this.eventHub.$off('cell-navigation', this.cellNavigation)
   }
 }

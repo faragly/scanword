@@ -1,16 +1,44 @@
 <template>
   <div id="app">
-    <ScanWord theme="gvozd-sezona" :arrowSize="{width: 48, height: 48}"/>
+    <section class="container">
+      <nav class="bd-tabs">
+        <div class="tabs is-centered">
+          <ul>
+            <li v-for="tab in tabs" :class="{'is-active': tab.id === active}" :key="tab.id">
+              <router-link :to="tab.path">{{ tab.text }}</router-link>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </section>
+
+    <router-view/>
   </div>
 </template>
 
 <script>
-import ScanWord from './components/ScanWord.vue'
-
 export default {
-  name: 'app',
-  components: {
-    ScanWord
+  name: 'home',
+  beforeCreate() {
+    // eslint-disable-next-line
+    console.clear()
+	},
+  data () {
+    return {
+      active: null,
+      tabs: [
+        { id: 1, name: 'scanword', text: 'Сканворд', path: '/' },
+        { id: 2, name: 'scanword_create', text: 'Создание сканворда', path: '/create' }
+      ]
+    }
+  },
+  watch: {
+    "$route": {
+      immediate: true,
+      handler() {
+        this.active = this.tabs.filter(item => this.$route.name === item.name)[0].id
+      }
+    }
   }
 }
 </script>
@@ -33,5 +61,9 @@ body {
   text-align: center;
   color: #2c3e50;
   height: 100vh;
+}
+
+.bd-tabs {
+  margin-bottom: 2rem;
 }
 </style>
